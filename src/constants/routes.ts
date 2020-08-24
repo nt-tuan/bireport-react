@@ -65,7 +65,7 @@ export const routes: { [key: string]: RouteProps } = {
   },
   admin: {
     component: React.lazy(() =>
-      import("views/PostAdmin").then((u) => ({ default: u.Admin }))
+      import("views/ReportAdmin").then((u) => ({ default: u.ReportAdmin }))
     ),
     path: "/admin",
     getPath: () => "/admin",
