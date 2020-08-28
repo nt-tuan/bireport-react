@@ -5,6 +5,8 @@ import { Switch, Route } from "react-router-dom";
 import "../node_modules/normalize.css/normalize.css";
 import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
+import "../node_modules/react-grid-layout/css/styles.css";
+import "../node_modules/react-resizable/css/styles.css";
 import "styles/App.scss";
 import { Slideshow } from "components/Slideshow/Slideshow";
 import useScreenSize, { ScreenSize } from "layout/useScreenSize";

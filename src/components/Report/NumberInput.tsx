@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportContext } from "./Report";
-import { InputGroup, FormGroup, NumericInput } from "@blueprintjs/core";
+import { FormGroup, NumericInput } from "@blueprintjs/core";
 import { IFilterMeta } from "resources/report/ReportTemplate";
 
 interface Props extends IFilterMeta {}
@@ -15,7 +15,7 @@ export const NumberInput = (props: Props) => {
       }));
   };
   return (
-    <FormGroup label={props.label}>
+    <FormGroup label={props.label} labelInfo={props.required ? "(*)" : ""}>
       <NumericInput fill onChange={handleChange} />
     </FormGroup>
   );

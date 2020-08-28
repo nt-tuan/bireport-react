@@ -13,7 +13,7 @@ export const TextInput = (props: IFilterMeta) => {
       }));
   };
   return (
-    <FormGroup label={props.label}>
+    <FormGroup label={props.label} labelInfo={props.required ? "(*)" : ""}>
       <InputGroup
         fill
         type="text"

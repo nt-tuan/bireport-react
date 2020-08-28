@@ -63,13 +63,22 @@ export const routes: { [key: string]: RouteProps } = {
     getPath: () => "/search",
     exact: true,
   },
-  admin: {
+  reportAdmin: {
     component: React.lazy(() =>
       import("views/ReportAdmin").then((u) => ({ default: u.ReportAdmin }))
     ),
-    path: "/admin",
-    getPath: () => "/admin",
-    text: "Admin",
+    path: "/admin/report",
+    getPath: () => "/admin/report",
+    text: "Report admin",
+    exact: true,
+  },
+  report: {
+    component: React.lazy(() =>
+      import("views/Report").then((u) => ({ default: u.ReportView }))
+    ),
+    path: "/report/:id",
+    getPath: (id: number) => `/report/${id}`,
+    text: "Báo cáo",
     exact: true,
   },
   home: {

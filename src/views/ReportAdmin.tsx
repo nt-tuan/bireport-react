@@ -1,15 +1,11 @@
 import React from "react";
 import { IReportTemplate } from "resources/report/ReportTemplate";
 import { reportAPI } from "resources/report/report";
-import { ReportList } from "components/Admin/ReportList";
-import { ReportUpdator } from "components/Admin/ReportUpdator";
+import { EditableReportList } from "components/Admin/EditableReportList";
 import { ReportEditor } from "components/Admin/ReportEditor";
-import { ReportEmpty } from "components/Admin/ReportEmpty";
 import { Layout2 } from "layout/Layout2";
-
-interface SelectedReportState {
-  loading: boolean;
-}
+import { RequestError } from "resources/api/helper";
+import { toastError } from "components/Commons/ToasterError";
 
 interface IAdminContext {
   reports?: IReportTemplate[];
@@ -17,9 +13,13 @@ interface IAdminContext {
     React.SetStateAction<IReportTemplate[] | undefined>
   >;
   selectedReport?: IReportTemplate;
+  selectedReportLoading?: boolean;
   setSelectedReport?: React.Dispatch<
     React.SetStateAction<IReportTemplate | undefined>
   >;
+  onSelectionChange?: (id?: number) => void;
+  onNewReport?: () => void;
+  onDeleteReport?: () => void;
   refresh?: () => void;
 }
 export const ReportAdminContext = React.createContext<IAdminContext>({});
@@ -27,7 +27,37 @@ export const ReportAdminContext = React.createContext<IAdminContext>({});
 export const ReportAdmin = () => {
   const [reports, setReports] = React.useState<IReportTemplate[]>();
   const [selectedReport, setSelectedReport] = React.useState<IReportTemplate>();
+  const [selectedReportLoading, setSelectedReportLoading] = React.useState<
+    boolean
+  >();
   const refresh = () => reportAPI.getTemplates().then(setReports);
+  const onSelectionChange = (id?: number) => {
+    setSelectedReport(undefined);
+
+    if (id == null) return;
+    setSelectedReportLoading(true);
+    reportAPI
+      .getTemplate(id)
+      .then(setSelectedReport)
+      .catch((err: RequestError) => toastError(err.message))
+      .finally(() => setSelectedReportLoading(false));
+  };
+  const onNewReport = () => {
+    setSelectedReport({
+      alias: "Report",
+      title: "New report",
+      templateSql: "",
+      filterMetas: [],
+    });
+  };
+  const onDeleteReport = () => {
+    const id = selectedReport?.id;
+    if (id == null) return;
+    reportAPI.deleteTemplate(id).then(() => {
+      setSelectedReport(undefined);
+      setReports((reports) => reports?.filter((report) => report.id !== id));
+    });
+  };
   React.useEffect(() => {
     reportAPI.getTemplates().then(setReports);
   }, []);
@@ -38,13 +68,16 @@ export const ReportAdmin = () => {
         reports,
         setReports,
         selectedReport,
+        selectedReportLoading,
         setSelectedReport,
         refresh,
+        onSelectionChange,
+        onNewReport,
+        onDeleteReport,
       }}
     >
-      <Layout2 left={<ReportList></ReportList>}>
-        {selectedReport && <ReportEditor />}
-        {!selectedReport && <ReportEmpty />}
+      <Layout2 left={<EditableReportList></EditableReportList>}>
+        <ReportEditor />
       </Layout2>
     </ReportAdminContext.Provider>
   );

@@ -23,9 +23,7 @@ interface MenuItemProps {
 }
 const items: MenuItemProps[] = [
   { icon: "helper-management", text: "Admin", link: "/admin" },
-  { icon: "home", text: "Tin tức", link: "/" },
-  { icon: "document", text: "Tài liệu", link: "/documents" },
-  { icon: "add", text: "Soạn tin", link: routes.postCreate.getPath() },
+  { icon: "home", text: "Dashboard", link: "/" },
 ];
 
 export const NavMenu = () => {

@@ -1,7 +1,7 @@
 export interface FilterItem {
   key: string;
   strings?: string[];
-  date?: Date;
+  date?: string;
   number?: number;
   string?: string;
 }

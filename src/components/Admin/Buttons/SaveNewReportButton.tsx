@@ -10,7 +10,7 @@ export const SaveNewReportButton = (props: IButtonProps) => {
   const { selectedReport, setSelectedReport, setReports } = React.useContext(
     ReportAdminContext
   );
-  const handleClick = () => {
+  const handleClick = React.useCallback(() => {
     if (selectedReport == null) return;
     setLoading(true);
     reportAPI
@@ -27,11 +27,11 @@ export const SaveNewReportButton = (props: IButtonProps) => {
       })
       .catch((error: RequestError) => toastError(error.message))
       .finally(() => setLoading(false));
-  };
+  }, [selectedReport, setReports, setSelectedReport]);
   if (selectedReport == null || selectedReport.id != null) return <></>;
   return (
     <Button {...props} intent="primary" onClick={handleClick} loading={loading}>
-      Lưu report
+      Lưu report mới
     </Button>
   );
 };

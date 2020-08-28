@@ -1,5 +1,6 @@
 .breadscrumbs {
-    margin-left: 28px;
+    padding-left: 20px;
+    border-left: solid 8px $primary;
     width: 100%;
     .bp3-breadcrumb-current {
         color: $primary;

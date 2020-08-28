@@ -1,10 +1,37 @@
 import { IReportTemplate, IFilterMeta } from "resources/report/ReportTemplate";
 import { RequestError } from "resources/api/helper";
 import { ReadReportModel } from "./ReadReportModel";
+import { ReportSQL } from "./ReportSQL";
 const getError = (code: number, message: string) => {
   return { code, message } as RequestError;
 };
 const base = process.env.REACT_APP_API_URL;
+export const download = async (
+  method: string,
+  path: string,
+  body?: BodyInit
+) => {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  const response = await fetch(`${base}/${path}`, {
+    method,
+    headers,
+    body,
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    return Promise.reject(getError(response.status, text));
+  }
+  const blob = await response.blob();
+  var url = window.URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "data.xlsx";
+  document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+  a.click();
+  a.remove();
+};
 export const request = async <T>(
   method: string,
   path: string,
@@ -46,7 +73,7 @@ const updateTemplate = async (template: IReportTemplate) => {
   await put(`admin/report`, JSON.stringify(template));
   return;
 };
-const deleteTemplate = async (key: string) => {
+const deleteTemplate = async (key: number) => {
   await _delete(`admin/report?key=${key}`);
   return;
 };
@@ -64,11 +91,15 @@ const deleteFilterItem = async (id: number) => {
 };
 
 const getReport = async (model: ReadReportModel) => {
-  return await post("report", JSON.stringify(model));
+  return await post<any[]>("report", JSON.stringify(model));
+};
+
+const downloadExcelReport = async (model: ReadReportModel) => {
+  await download("POST", "report/excel", JSON.stringify(model));
 };
 
 const getReportSQL = async (model: ReadReportModel) => {
-  return await post<string>("report/sql", JSON.stringify(model));
+  return await post<ReportSQL>("report/sql", JSON.stringify(model));
 };
 
 export const reportAPI = {
@@ -82,5 +113,6 @@ export const reportAPI = {
   updateFilterItem,
   deleteFilterItem,
   getReport,
+  downloadExcelReport,
   getReportSQL,
 };

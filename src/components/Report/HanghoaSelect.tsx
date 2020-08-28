@@ -1,13 +1,12 @@
 import React from "react";
 import { OptionsType, ValueType, InputActionMeta } from "react-select";
 import { KV } from "resources/danhmuc/KeyValue";
-import Select from "react-select";
 import { getDMHanghoa } from "resources/danhmuc/api";
 import { FilterItem } from "resources/report/FilterItem";
 import { IFilterMeta } from "resources/report/ReportTemplate";
 import { FormGroup } from "@blueprintjs/core";
-import { containStyle, controlStyle, valueStyle } from "./KVSelect";
 import { ReportContext } from "./Report";
+import { StyledSelect } from "components/Commons/StyledSelect";
 interface Props extends IFilterMeta {
   items?: KV[];
   getFromSource?: () => Promise<KV[]>;
@@ -32,18 +31,13 @@ export const HanghoaSelect = (props: Props) => {
     if (meta.action === "input-change") getDMHanghoa(value).then(setOptions);
   };
   return (
-    <FormGroup label={props.label}>
-      <Select
+    <FormGroup label={props.label} labelInfo={props.required ? "(*)" : ""}>
+      <StyledSelect
         closeMenuOnSelect={false}
         isMulti
         options={options}
         onInputChange={handleInputChange}
         onChange={handleSelect}
-        styles={{
-          container: (provided, state) => ({ ...provided, ...containStyle }),
-          control: (provided) => ({ ...provided, ...controlStyle }),
-          valueContainer: (providede) => ({ ...providede, ...valueStyle }),
-        }}
       />
     </FormGroup>
   );

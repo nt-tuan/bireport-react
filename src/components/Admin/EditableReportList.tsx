@@ -1,16 +1,36 @@
 import React from "react";
 import { ReportAdminContext } from "views/ReportAdmin";
-import { Button, ITreeNode, Tree } from "@blueprintjs/core";
+import { Button, ITreeNode, Tree, ButtonGroup } from "@blueprintjs/core";
 import { IReportTemplate } from "resources/report/ReportTemplate";
-import { reportAPI } from "resources/report/report";
-import { toastError } from "components/Commons/ToasterError";
-import { RequestError } from "resources/api/helper";
+import { escapeRegExp } from "helpers/strings";
+import { DeleteReportButton } from "./Buttons/DeleteReportButton";
 
-const newReport: IReportTemplate = {
-  alias: "Report",
-  title: "New report",
-  templateSql: "",
-  filterMetas: [],
+const addLeaf = (
+  report: IReportTemplate,
+  selectedReport: IReportTemplate | undefined,
+  label: string,
+  nodes: ITreeNode[]
+) => {
+  const any = nodes.filter((u) => u.id === report.id).length > 0;
+  if (!any)
+    return [
+      ...nodes,
+      {
+        label,
+        id: report.id,
+        isSelected: selectedReport?.id === report.id,
+        icon: "document",
+      } as ITreeNode,
+    ];
+  return nodes.map((node) => {
+    if (node.id === report.id)
+      return {
+        ...node,
+        label,
+        isSelected: selectedReport?.id === report.id,
+      };
+    return node;
+  });
 };
 
 const addNodes = (
@@ -20,31 +40,13 @@ const addNodes = (
   nodes: ITreeNode[]
 ) => {
   if (parts.length === 0) return nodes;
+  const label = parts[0];
   if (parts.length === 1) {
-    const any = nodes.filter((u) => u.id === report.id).length > 0;
-    if (!any)
-      return [
-        ...nodes,
-        {
-          label: parts[0],
-          id: report.id,
-          isSelected: selectedReport?.id === report.id,
-          icon: "document",
-        } as ITreeNode,
-      ];
-    return nodes.map((node) => {
-      if (node.id === report.id)
-        return {
-          ...node,
-          label: parts[0],
-          isSelected: selectedReport?.id === report.id,
-        };
-      return node;
-    });
+    return addLeaf(report, selectedReport, label, nodes);
   }
   let found = false;
   const newNodes = nodes.map((node) => {
-    if (node.label === parts[0]) {
+    if (node.label === label) {
       const childNodes = addNodes(
         report,
         selectedReport,
@@ -57,13 +59,16 @@ const addNodes = (
     return node;
   });
   if (found) return newNodes;
+
+  const isExpanded: boolean =
+    selectedReport?.alias.match(escapeRegExp(label)) != null;
   const childNodes = addNodes(
     report,
     selectedReport,
     parts.filter((_, index) => index > 0),
     []
   ) as ITreeNode[];
-  return [...nodes, { label: parts[0], id: parts[0], childNodes } as ITreeNode];
+  return [...nodes, { label, id: label, childNodes, isExpanded } as ITreeNode];
 };
 
 function updateNode(
@@ -89,8 +94,8 @@ function updateNode(
   }) as ITreeNode[];
 }
 
-export const ReportList = () => {
-  const { reports, selectedReport, setSelectedReport } = React.useContext(
+const ReportList = () => {
+  const { reports, selectedReport, onSelectionChange } = React.useContext(
     ReportAdminContext
   );
   const [treeNodes, setTreeNodes] = React.useState<ITreeNode[]>([]);
@@ -117,35 +122,50 @@ export const ReportList = () => {
   };
   const handleNodeClick = (node: ITreeNode) => {
     if (node.childNodes != null) return;
-    reportAPI
-      .getTemplate(node.id as number)
-      .then((report) => {
-        if (report == null) {
-          toastError("Không tìm thấy report");
-        }
-        setSelectedReport && setSelectedReport(report);
-      })
-      .catch((err: RequestError) => toastError(err.message));
+    onSelectionChange && onSelectionChange(node.id as number);
   };
+  return (
+    <Tree
+      contents={treeNodes}
+      onNodeCollapse={handleNodeCollapse}
+      onNodeExpand={handleNodeExpand}
+      onNodeClick={handleNodeClick}
+    />
+  );
+};
+
+export const EditableReportList = () => {
+  const { onNewReport } = React.useContext(ReportAdminContext);
   return (
     <div className="card">
       <div className="card-header align-left">
         <h2>Danh sách report</h2>
-        <Button
-          icon="add"
-          minimal
-          intent="primary"
-          style={{ marginRight: "2px" }}
-          onClick={() => setSelectedReport && setSelectedReport(newReport)}
-        ></Button>
+        <div className="card-header-actions">
+          <ButtonGroup>
+            <Button
+              icon="add"
+              intent="primary"
+              onClick={() => onNewReport && onNewReport()}
+            />
+            <DeleteReportButton />
+          </ButtonGroup>
+        </div>
       </div>
       <div className="card-content">
-        <Tree
-          contents={treeNodes}
-          onNodeCollapse={handleNodeCollapse}
-          onNodeExpand={handleNodeExpand}
-          onNodeClick={handleNodeClick}
-        />
+        <ReportList />
+      </div>
+    </div>
+  );
+};
+
+export const ReportMenu = () => {
+  return (
+    <div className="card">
+      <div className="card-header align-left">
+        <h2>Danh sách report</h2>
+      </div>
+      <div className="card-content">
+        <ReportList />
       </div>
     </div>
   );
