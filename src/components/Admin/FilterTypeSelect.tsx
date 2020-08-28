@@ -4,8 +4,10 @@ import { FilterType } from "resources/report/FilterType";
 
 export const FilterTypeSelect = ({
   onChange,
+  defaultValue,
 }: {
   onChange: (type: FilterType) => void;
+  defaultValue?: FilterType;
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
@@ -14,12 +16,10 @@ export const FilterTypeSelect = ({
     }
   };
   return (
-    <div className="bp3-select">
-      <HTMLSelect
-        onChange={handleChange}
-        options={Object.keys(FilterType)}
-        defaultValue={FilterType.DATE}
-      ></HTMLSelect>
-    </div>
+    <HTMLSelect
+      onChange={handleChange}
+      options={Object.keys(FilterType)}
+      defaultValue={defaultValue}
+    />
   );
 };

@@ -1,30 +1,27 @@
 import React from "react";
-import { Button, InputGroup, ControlGroup } from "@blueprintjs/core";
+import { Button, ControlGroup } from "@blueprintjs/core";
 import { ReportAdminContext } from "views/ReportAdmin";
-import { IFilterMeta, DefaultFilters } from "resources/report/ReportTemplate";
+import { DefaultFilters } from "resources/report/ReportTemplate";
 import { FilterTypeSelect } from "../FilterTypeSelect";
-import { handleInputChange } from "react-select/src/utils";
 import { FilterType } from "resources/report/FilterType";
 
-const newFilter: IFilterMeta = {
-  label: "",
-  name: "",
-  x: 0,
-  y: 0,
-  w: 0,
-  h: 0,
-  required: false,
-};
 export const AddFilterButtons = () => {
-  const [selectedType, setSelectedType] = React.useState<FilterType>();
+  const [selectedType, setSelectedType] = React.useState<FilterType>(
+    FilterType.DATE
+  );
   const { setSelectedReport } = React.useContext(ReportAdminContext);
   const handleAddFilter = () => {
+    if (selectedType == null) return;
+    const newFilter = DefaultFilters[selectedType];
     setSelectedReport &&
       setSelectedReport((report) =>
         report
           ? {
               ...report,
-              filterMetas: [...(report?.filterMetas ?? []), newFilter],
+              filterMetas: [
+                ...(report?.filterMetas ?? []),
+                { ...newFilter, x: 0, y: 0 },
+              ],
             }
           : undefined
       );
@@ -46,9 +43,12 @@ export const AddFilterButtons = () => {
 
   return (
     <>
-      <ControlGroup>
-        <FilterTypeSelect onChange={setSelectedType} />
-        <Button icon="add" intent="primary" onClick={handleAddFilter}>
+      <ControlGroup vertical={false}>
+        <FilterTypeSelect
+          onChange={setSelectedType}
+          defaultValue={FilterType.DATE}
+        />
+        <Button intent="primary" icon="add" onClick={handleAddFilter}>
           Thêm
         </Button>
       </ControlGroup>

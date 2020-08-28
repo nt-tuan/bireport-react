@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import Select, { Props } from "react-select/src/Select";
+import Select, { OptionTypeBase, Props } from "react-select";
 export const containStyle: CSSProperties = {
   appearance: "none",
   background: "#ffffff",
@@ -31,7 +31,7 @@ export const valueStyle: CSSProperties = {
   lineHeight: "20px",
 };
 
-export const StyledSelect = (props: Props<any>) => {
+export const StyledSelect = <T extends OptionTypeBase>(props: Props<any>) => {
   return (
     <Select
       {...props}

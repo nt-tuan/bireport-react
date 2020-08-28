@@ -1,17 +1,42 @@
 import React from "react";
-import { Button } from "@blueprintjs/core";
+import { Button, Alert, Intent } from "@blueprintjs/core";
 import { ReportAdminContext } from "views/ReportAdmin";
 
 export const DeleteReportButton = () => {
-  const { onDeleteReport, setSelectedReport } = React.useContext(
+  const [showAlert, setShowAlert] = React.useState<boolean>(false);
+  const { selectedReport, onDeleteReport } = React.useContext(
     ReportAdminContext
   );
-  if (setSelectedReport == null) return <></>;
+  const handleConfirmDelete = () => {
+    onDeleteReport && onDeleteReport();
+    setShowAlert(false);
+  };
+
+  if (selectedReport == null) return <></>;
   return (
-    <Button
-      icon="delete"
-      intent="danger"
-      onClick={() => onDeleteReport && onDeleteReport()}
-    />
+    <>
+      <Alert
+        cancelButtonText="Không"
+        confirmButtonText="Xóa"
+        icon="trash"
+        intent={Intent.DANGER}
+        isOpen={showAlert}
+        onCancel={() => setShowAlert(false)}
+        onConfirm={handleConfirmDelete}
+      >
+        <p>
+          Bạn có muốn xóa{" "}
+          <b>
+            [#{selectedReport.id}] {selectedReport.title}
+          </b>
+          ?
+        </p>
+      </Alert>
+      <Button
+        icon="delete"
+        intent="danger"
+        onClick={() => setShowAlert(true)}
+      />
+    </>
   );
 };

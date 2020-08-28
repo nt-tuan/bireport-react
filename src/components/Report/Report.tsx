@@ -32,7 +32,13 @@ export const Report = (props: Props) => {
   const [reportSQL, setReportSQL] = React.useState<ReportSQL>();
   const [error, setError] = React.useState<string>();
   const [data, setData] = React.useState<any[]>();
+  const clear = () => {
+    setError(undefined);
+    setData(undefined);
+    setReportSQL(undefined);
+  };
   const handlePreview = () => {
+    clear();
     const id = props.report.id;
     if (id === undefined) {
       toastError("Report không hợp lệ");
@@ -45,6 +51,7 @@ export const Report = (props: Props) => {
       .catch((err: RequestError) => setError(err.message));
   };
   const handleViewOnline = () => {
+    clear();
     const id = props.report.id;
     if (id === undefined) {
       toastError("Report không hợp lệ");
@@ -57,6 +64,7 @@ export const Report = (props: Props) => {
       .catch((err: RequestError) => setError(err.message));
   };
   const handleExportExcel = () => {
+    clear();
     const id = props.report.id;
     if (id === undefined) {
       toastError("Report không hợp lệ");

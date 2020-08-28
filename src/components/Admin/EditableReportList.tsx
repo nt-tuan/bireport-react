@@ -38,7 +38,7 @@ const addNodes = (
   selectedReport: IReportTemplate | undefined,
   parts: string[],
   nodes: ITreeNode[]
-) => {
+): ITreeNode[] => {
   if (parts.length === 0) return nodes;
   const label = parts[0];
   if (parts.length === 1) {
@@ -67,7 +67,7 @@ const addNodes = (
     selectedReport,
     parts.filter((_, index) => index > 0),
     []
-  ) as ITreeNode[];
+  );
   return [...nodes, { label, id: label, childNodes, isExpanded } as ITreeNode];
 };
 
@@ -94,12 +94,32 @@ function updateNode(
   }) as ITreeNode[];
 }
 
+const removeNode = (
+  nodes: ITreeNode[],
+  reports: IReportTemplate[]
+): ITreeNode[] => {
+  return nodes.reduce((filtered: ITreeNode[], node) => {
+    if (!node.childNodes) {
+      const any = reports.filter((report) => report.id === node.id);
+      if (any.length === 0) return filtered;
+      return [...filtered, node];
+    }
+    return [
+      ...filtered,
+      { ...node, childNodes: removeNode(node.childNodes, reports) },
+    ];
+  }, []);
+};
+
 const ReportList = () => {
   const { reports, selectedReport, onSelectionChange } = React.useContext(
     ReportAdminContext
   );
   const [treeNodes, setTreeNodes] = React.useState<ITreeNode[]>([]);
   React.useEffect(() => {
+    // Remove
+    setTreeNodes((nodes) => (reports ? removeNode(nodes, reports) : []));
+    // Add
     reports?.map((report) => {
       setTreeNodes((treeNodes) => {
         const parts = report.alias

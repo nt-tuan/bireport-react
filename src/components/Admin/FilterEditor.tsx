@@ -60,7 +60,14 @@ export const FilterContentEditor = ({
   return (
     <div>
       <FormGroup label={index === 0 ? "Loại filter" : undefined}>
-        <FilterTypeSelect onChange={handleTypeSelect} />
+        <FilterTypeSelect
+          onChange={handleTypeSelect}
+          defaultValue={
+            filter.type
+              ? FilterType[filter.type as keyof typeof FilterType]
+              : undefined
+          }
+        />
       </FormGroup>
       <FormGroup label={index === 0 ? "Label" : undefined}>
         <InputGroup
@@ -76,7 +83,11 @@ export const FilterContentEditor = ({
           onChange={handleInputChange}
         />
       </FormGroup>
-      <Checkbox label="Bắt buộc" onChange={onRequiredChange} />
+      <Checkbox
+        label="Bắt buộc"
+        checked={filter.required}
+        onChange={onRequiredChange}
+      />
       {filter.type === FilterType.CUSTOM && (
         <FormGroup
           label="Options"

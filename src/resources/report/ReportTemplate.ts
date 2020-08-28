@@ -44,10 +44,29 @@ const newFilter = (
     options,
   } as IFilterMeta;
 };
-
+const defaultWidth = 1;
+const defaultHeight = 1;
 export const DefaultDateRange = [
-  newFilter(FilterType.DATE, "Từ ngày", "fromDate", 0, 0, 2, 1, true),
-  newFilter(FilterType.DATE, "Đến ngày", "toDate", 0, 1, 2, 1, true),
+  newFilter(
+    FilterType.DATE,
+    "Từ ngày",
+    "fromDate",
+    0,
+    0,
+    defaultWidth,
+    defaultHeight,
+    true
+  ),
+  newFilter(
+    FilterType.DATE,
+    "Đến ngày",
+    "toDate",
+    0,
+    1,
+    defaultWidth,
+    defaultHeight,
+    true
+  ),
 ];
 export const DefaultDate = newFilter(
   FilterType.DATE,
@@ -55,8 +74,8 @@ export const DefaultDate = newFilter(
   "date",
   0,
   1,
-  2,
-  1,
+  defaultWidth,
+  defaultHeight,
   true
 );
 export const DefaultKhuvuc = newFilter(
@@ -65,8 +84,8 @@ export const DefaultKhuvuc = newFilter(
   "khuvuc",
   1,
   0,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultChinhanh = newFilter(
   FilterType.CHINHANH,
@@ -74,8 +93,8 @@ export const DefaultChinhanh = newFilter(
   "chinhanh",
   1,
   1,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultTinh = newFilter(
   FilterType.TINH,
@@ -83,8 +102,8 @@ export const DefaultTinh = newFilter(
   "tinh",
   1,
   2,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultQuan = newFilter(
   FilterType.QUAN,
@@ -92,8 +111,8 @@ export const DefaultQuan = newFilter(
   "quan",
   1,
   3,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultChungloai = newFilter(
   FilterType.CHUNGLOAI,
@@ -101,8 +120,8 @@ export const DefaultChungloai = newFilter(
   "chungloai",
   2,
   0,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultLoaiKD = newFilter(
   FilterType.LOAIKD,
@@ -110,8 +129,8 @@ export const DefaultLoaiKD = newFilter(
   "danhmuc",
   2,
   1,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultNhomtrilieu = newFilter(
   FilterType.NHOMTRILIEU,
@@ -119,8 +138,8 @@ export const DefaultNhomtrilieu = newFilter(
   "nhomtrilieu",
   2,
   2,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultHanghoa = newFilter(
   FilterType.HANGHOA,
@@ -128,8 +147,8 @@ export const DefaultHanghoa = newFilter(
   "hanghoa",
   2,
   3,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultKenh = newFilter(
   FilterType.KENH,
@@ -137,8 +156,8 @@ export const DefaultKenh = newFilter(
   "kenh",
   3,
   0,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultKenhChung = newFilter(
   FilterType.KENHCHUNG,
@@ -146,8 +165,8 @@ export const DefaultKenhChung = newFilter(
   "ctkenh",
   3,
   1,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultKhachhang = newFilter(
   FilterType.KHACHHANG,
@@ -155,8 +174,8 @@ export const DefaultKhachhang = newFilter(
   "khachhang",
   3,
   2,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultNumberInput = newFilter(
   FilterType.NUMBER,
@@ -164,8 +183,8 @@ export const DefaultNumberInput = newFilter(
   "number",
   3,
   3,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultTextInput = newFilter(
   FilterType.TEXT,
@@ -173,8 +192,8 @@ export const DefaultTextInput = newFilter(
   "number",
   3,
   3,
-  2,
-  1
+  defaultWidth,
+  defaultHeight
 );
 export const DefaultCustom = newFilter(
   FilterType.CUSTOM,
@@ -182,8 +201,8 @@ export const DefaultCustom = newFilter(
   "valueType",
   0,
   0,
-  2,
-  1,
+  defaultWidth,
+  defaultHeight,
   true,
   `
 doanhso, Doanh Số

@@ -17,13 +17,7 @@ export const SaveNewReportButton = (props: IButtonProps) => {
       .addTemplate(selectedReport)
       .then((report) => {
         setSelectedReport && setSelectedReport(report);
-        setReports &&
-          setReports((reports) =>
-            reports?.map((old) => {
-              if (old.id === report.id) return report;
-              return old;
-            })
-          );
+        setReports && setReports((reports) => [...(reports ?? []), report]);
       })
       .catch((error: RequestError) => toastError(error.message))
       .finally(() => setLoading(false));

@@ -50,14 +50,14 @@ export const ReportAdmin = () => {
       filterMetas: [],
     });
   };
-  const onDeleteReport = () => {
+  const onDeleteReport = React.useCallback(() => {
     const id = selectedReport?.id;
     if (id == null) return;
     reportAPI.deleteTemplate(id).then(() => {
       setSelectedReport(undefined);
       setReports((reports) => reports?.filter((report) => report.id !== id));
     });
-  };
+  }, [selectedReport]);
   React.useEffect(() => {
     reportAPI.getTemplates().then(setReports);
   }, []);
